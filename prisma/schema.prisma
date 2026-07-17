@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum LineItemCategory {
+  accommodation
+  transportation
+  program
+}
+
+enum Currency {
+  GBP
+  EUR
+  HUF
+}
+
+enum PricingType {
+  group
+  perPerson
+}
+
+model Trip {
+  id                  String     @id @db.VarChar(30)
+  tripName            String     @map("trip_name") @db.VarChar(255)
+  tripDateFrom        DateTime   @map("trip_date_from") @db.Date
+  tripDateTo          DateTime   @map("trip_date_to") @db.Date
+  hufToGbp            Decimal    @map("huf_to_gbp") @db.Decimal(10, 6)
+  eurToGbp            Decimal    @map("eur_to_gbp") @db.Decimal(10, 6)
+  scenarios           Json
+  packageSalePriceGbp Decimal    @map("package_sale_price_gbp") @db.Decimal(10, 2)
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+  lineItems           LineItem[]
+
+  @@map("trips")
+}
+
+model LineItem {
+  id          String           @id @db.VarChar(30)
+  tripId      String           @map("trip_id") @db.VarChar(30)
+  category    LineItemCategory
+  name        String           @db.VarChar(255)
+  price       Decimal          @db.Decimal(10, 2)
+  currency    Currency
+  pricingType PricingType?     @map("pricing_type")
+  units       Int?
+  nights      Int?
+  trip        Trip             @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@map("line_items")
+}
