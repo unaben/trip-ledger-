@@ -1,0 +1,150 @@
+.accommodationSection {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 20px 24px;
+}
+
+.accommodationSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.accommodationSectionHeader h2 {
+  font-family: var(--font-display);
+  font-size: 19px;
+  margin: 0;
+}
+
+.accommodationSectionTotalNights {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}
+
+.accommodationSectionTable {
+  display: flex;
+  flex-direction: column;
+}
+
+.accommodationSectionRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 0.8fr 0.7fr 28px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.accommodationSectionRowHead {
+  border-bottom: 2px solid var(--color-line-strong);
+  padding-bottom: 8px;
+}
+
+.accommodationSectionRowHead span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-soft);
+  font-weight: 600;
+}
+
+.accommodationSectionRow input,
+.accommodationSectionRow select {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.accommodationSectionRow input:hover,
+.accommodationSectionRow select:hover {
+  border-color: var(--color-line);
+}
+
+.accommodationSectionRow input:focus,
+.accommodationSectionRow select:focus {
+  border-color: var(--color-ink-soft);
+  background: var(--color-paper);
+}
+
+.accommodationSectionPrice,
+.accommodationSectionNights {
+  text-align: right;
+}
+
+.accommodationSectionCurrencyGbp {
+  color: var(--color-gbp);
+  font-weight: 600;
+}
+.accommodationSectionCurrencyEur {
+  color: var(--color-eur);
+  font-weight: 600;
+}
+.accommodationSectionCurrencyHuf {
+  color: var(--color-huf);
+  font-weight: 600;
+}
+
+.accommodationSectionRemove {
+  border: none;
+  background: transparent;
+  color: var(--color-ink-soft);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+
+.accommodationSectionRemove:hover {
+  color: var(--color-loss);
+  background: var(--color-loss-bg);
+}
+
+.accommodationSectionEmpty {
+  color: var(--color-ink-soft);
+  font-size: 14px;
+  padding: 16px 0;
+}
+
+.accommodationSectionAdd {
+  margin-top: 12px;
+  border: 1px dashed var(--color-line-strong);
+  background: transparent;
+  color: var(--color-ink-soft);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.accommodationSectionAdd:hover {
+  border-color: var(--color-ink);
+  color: var(--color-ink);
+}
+
+.accommodationSectionHint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--color-ink-soft);
+}
+
+@media (max-width: 720px) {
+  .accommodationSectionRow {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 12px 0;
+  }
+  .accommodationSectionRowHead {
+    display: none;
+  }
+}

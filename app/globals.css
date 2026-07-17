@@ -1,0 +1,88 @@
+/* ============================================================
+   DESIGN TOKENS
+   A small "ledger" theme: paper backgrounds, ink text, a serif
+   display face for headings, and a monospace face for numbers
+   so figures line up the way they would in an account book.
+   ============================================================ */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+:root {
+  /* Surfaces */
+  --color-paper: #f5f6f2;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #edeee8;
+
+  /* Ink & lines */
+  --color-ink: #14213d;
+  --color-ink-soft: #4c5568;
+  --color-line: #d9d7cc;
+  --color-line-strong: #b9b6a7;
+
+  /* Money accents */
+  --color-profit: #1b6f55;
+  --color-profit-bg: #e7f3ee;
+  --color-loss: #b3401d;
+  --color-loss-bg: #fbeae3;
+
+  /* Currency tags */
+  --color-gbp: #1b6f55;
+  --color-eur: #2f5d8a;
+  --color-huf: #8a6a2f;
+
+  /* Type */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Radius & shadow */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow-card: 0 1px 2px rgba(20, 33, 61, 0.06), 0 1px 1px rgba(20, 33, 61, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+input,
+select,
+button {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Numbers should always line up in neat columns. */
+.tabular-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

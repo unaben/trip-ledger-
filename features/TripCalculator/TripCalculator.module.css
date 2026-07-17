@@ -1,0 +1,89 @@
+.tripCalculator {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.tripCalculatorTopbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 2px solid var(--color-ink);
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+}
+
+.tripCalculatorTopbar h1 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.tripCalculatorLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-eur);
+  text-decoration: none;
+}
+
+.tripCalculatorLink:hover {
+  text-decoration: underline;
+}
+
+.tripCalculatorSubmitRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding-top: 6px;
+}
+
+.tripCalculatorSubmitSuccess {
+  margin: 0;
+  padding: 12px 16px;
+  background: var(--color-profit-bg);
+  border: 1px solid var(--color-profit);
+  color: var(--color-profit);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.tripCalculatorSubmitSuccess a {
+  color: var(--color-profit);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.tripCalculatorSubmitError {
+  font-size: 13px;
+  color: var(--color-loss);
+  font-weight: 500;
+}
+
+.tripCalculatorSubmitButton {
+  border: 1px solid var(--color-profit);
+  background: var(--color-profit);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tripCalculatorSubmitButton:hover {
+  opacity: 0.92;
+}
+
+.tripCalculatorSubmitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

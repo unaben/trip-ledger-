@@ -1,0 +1,74 @@
+.confirmationModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 33, 61, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.confirmationModal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  max-width: 380px;
+  width: 100%;
+}
+
+.confirmationModalTitle {
+  font-family: var(--font-display);
+  font-size: 20px;
+  margin: 0 0 10px;
+  color: var(--color-ink);
+}
+
+.confirmationModalMessage {
+  font-size: 14px;
+  color: var(--color-ink-soft);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.confirmationModalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.confirmationModalButton {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--color-paper);
+}
+
+.confirmationModalButtonCancel:hover {
+  border-color: var(--color-ink-soft);
+}
+
+.confirmationModalButtonConfirm {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-surface);
+}
+
+.confirmationModalButtonConfirm:hover {
+  opacity: 0.9;
+}
+
+.confirmationModalButtonDanger {
+  background: var(--color-loss);
+  border-color: var(--color-loss);
+  color: var(--color-surface);
+}
+
+.confirmationModalButtonDanger:hover {
+  opacity: 0.9;
+}

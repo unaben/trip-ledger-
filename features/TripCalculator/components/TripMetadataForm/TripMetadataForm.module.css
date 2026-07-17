@@ -1,0 +1,88 @@
+.metadataForm {
+  display: grid;
+  grid-template-columns: 2fr 1.4fr auto;
+  gap: 24px;
+  align-items: end;
+  padding: 20px 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.metadataFormField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metadataFormField label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metadataFormField input {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 14px;
+  background: var(--color-paper);
+}
+
+.metadataFormField input:focus {
+  border-color: var(--color-ink-soft);
+}
+
+.metadataFormFieldWide input {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.metadataFormRates {
+  display: flex;
+  gap: 16px;
+}
+
+.metadataFormRates input {
+  font-family: var(--font-mono);
+  width: 110px;
+}
+
+.metadataFormDateRange {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.metadataFormDateRange input {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 14px;
+  background: var(--color-paper);
+  flex: 1;
+  min-width: 0;
+}
+
+.metadataFormDateRange input:focus {
+  border-color: var(--color-ink-soft);
+}
+
+.metadataFormDateSep {
+  color: var(--color-ink-soft);
+  flex-shrink: 0;
+}
+
+@media (max-width: 860px) {
+  .metadataForm {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  .metadataFormRates {
+    flex-wrap: wrap;
+  }
+}

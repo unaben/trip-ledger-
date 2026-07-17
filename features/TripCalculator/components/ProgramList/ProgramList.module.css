@@ -1,0 +1,133 @@
+.programList {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 20px 24px 8px;
+}
+
+.programListHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.programListHeader h2 {
+  font-family: var(--font-display);
+  font-size: 19px;
+  margin: 0;
+}
+
+.programListAdd {
+  border: 1px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-surface);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.programListAdd:hover {
+  opacity: 0.88;
+}
+
+.programListTable {
+  display: flex;
+  flex-direction: column;
+}
+
+.programListRow {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 0.8fr 1.4fr 28px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.programListRowHead {
+  border-bottom: 2px solid var(--color-line-strong);
+  padding-bottom: 8px;
+}
+
+.programListRowHead span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-soft);
+  font-weight: 600;
+}
+
+.programListRow input,
+.programListRow select {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.programListRow input:hover,
+.programListRow select:hover {
+  border-color: var(--color-line);
+}
+
+.programListRow input:focus,
+.programListRow select:focus {
+  border-color: var(--color-ink-soft);
+  background: var(--color-paper);
+}
+
+.programListPrice {
+  text-align: right;
+}
+
+.programListCurrencyGbp {
+  color: var(--color-gbp);
+  font-weight: 600;
+}
+.programListCurrencyEur {
+  color: var(--color-eur);
+  font-weight: 600;
+}
+.programListCurrencyHuf {
+  color: var(--color-huf);
+  font-weight: 600;
+}
+
+.programListRemove {
+  border: none;
+  background: transparent;
+  color: var(--color-ink-soft);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+
+.programListRemove:hover {
+  color: var(--color-loss);
+  background: var(--color-loss-bg);
+}
+
+.programListEmpty {
+  color: var(--color-ink-soft);
+  font-size: 14px;
+  padding: 16px 0;
+}
+
+@media (max-width: 720px) {
+  .programListRow {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 12px 0;
+  }
+  .programListRowHead {
+    display: none;
+  }
+}

@@ -1,0 +1,157 @@
+.transportationSection {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 20px 24px 8px;
+}
+
+.transportationSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.transportationSectionHeader h2 {
+  font-family: var(--font-display);
+  font-size: 19px;
+  margin: 0;
+}
+
+.transportationSectionAdd {
+  border: 1px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-surface);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.transportationSectionAdd:hover {
+  opacity: 0.88;
+}
+
+.transportationSectionTable {
+  display: flex;
+  flex-direction: column;
+}
+
+.transportationSectionName {
+  font-weight: 500;
+}
+
+.transportationSectionRow {
+  display: grid;
+  grid-template-columns: 1.8fr 0.9fr 0.7fr 1.3fr 0.6fr 28px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.transportationSectionRowHead {
+  border-bottom: 2px solid var(--color-line-strong);
+  padding-bottom: 8px;
+}
+
+.transportationSectionRowHead span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-soft);
+  font-weight: 600;
+}
+
+.transportationSectionRow input,
+.transportationSectionRow select {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.transportationSectionRow input:hover,
+.transportationSectionRow select:hover {
+  border-color: var(--color-line);
+}
+
+.transportationSectionRow input:focus,
+.transportationSectionRow select:focus {
+  border-color: var(--color-ink-soft);
+  background: var(--color-paper);
+}
+
+.transportationSectionPrice,
+.transportationSectionUnits {
+  text-align: right;
+}
+
+.transportationSectionPricingType {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.transportationSectionCurrency {
+  font-weight: 600;
+}
+
+.transportationSectionCurrencyGbp {
+  color: var(--color-gbp);
+  font-weight: 600;
+}
+.transportationSectionCurrencyEur {
+  color: var(--color-eur);
+  font-weight: 600;
+}
+.transportationSectionCurrencyHuf {
+  color: var(--color-huf);
+  font-weight: 600;
+}
+
+.transportationSectionRemove {
+  border: none;
+  background: transparent;
+  color: var(--color-ink-soft);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+
+.transportationSectionRemove:hover {
+  color: var(--color-loss);
+  background: var(--color-loss-bg);
+}
+
+.transportationSectionEmpty {
+  color: var(--color-ink-soft);
+  font-size: 14px;
+  padding: 16px 0;
+}
+
+.transportationSectionHint {
+  margin: 10px 0 12px;
+  font-size: 12px;
+  color: var(--color-ink-soft);
+}
+
+@media (max-width: 720px) {
+  .transportationSectionRow {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 12px 0;
+  }
+  .transportationSectionRowHead {
+    display: none;
+  }
+}

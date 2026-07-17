@@ -1,0 +1,228 @@
+.scenarioBoardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.scenarioBoardHeader h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  margin: 0;
+}
+
+.scenarioBoardSalePrice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scenarioBoardSalePrice label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.scenarioBoardSalePriceInput {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+}
+
+.scenarioBoardSalePriceInput span {
+  color: var(--color-ink-soft);
+  font-family: var(--font-mono);
+}
+
+.scenarioBoardSalePriceInput input {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 600;
+  width: 90px;
+}
+
+.scenarioBoardSalePriceInput input:focus {
+  outline: none;
+}
+
+.scenarioBoardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+/* ------------------------------------------------------------
+   THE "RECEIPT" — signature element.
+   Each scenario reads like a paper receipt stub: perforated top
+   and bottom edges, a dashed divider, and a stamped profit line.
+   ------------------------------------------------------------ */
+.receipt {
+  position: relative;
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-line);
+  border-right: 1px solid var(--color-line);
+  padding: 4px 20px 20px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.receiptNotch {
+  height: 9px;
+  margin: 0 -1px;
+  background-image: radial-gradient(
+    circle at 9px 50%,
+    var(--color-paper) 9px,
+    transparent 9.5px
+  );
+  background-size: 18px 18px;
+  background-repeat: repeat-x;
+  background-position: 4px center;
+}
+
+.receiptHeader {
+  padding-top: 6px;
+}
+
+.receiptLabel {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  text-align: center;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.receiptLabel:hover,
+.receiptLabel:focus {
+  background: var(--color-paper);
+}
+
+.receiptHeadcounts {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.receiptHeadcounts label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+  font-weight: 600;
+}
+
+.receiptHeadcounts input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+
+.receiptDivider {
+  border-top: 1.5px dashed var(--color-line-strong);
+}
+
+.receiptLines {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0;
+}
+
+.receiptLine {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.receiptLine dt {
+  color: var(--color-ink-soft);
+  font-weight: 400;
+}
+
+.receiptLine dd {
+  margin: 0;
+  font-size: 13px;
+}
+
+.receiptTotals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.receiptTotalLine {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--color-ink-soft);
+}
+
+.receiptTotalLine:first-child {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.receiptProfit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid;
+}
+
+.receiptProfitGain {
+  background: var(--color-profit-bg);
+  border-color: var(--color-profit);
+  color: var(--color-profit);
+}
+
+.receiptProfitLoss {
+  background: var(--color-loss-bg);
+  border-color: var(--color-loss);
+  color: var(--color-loss);
+}
+
+.receiptProfitLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.receiptProfitValue {
+  font-size: 19px;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .scenarioBoardGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,169 @@
+.tripList {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.tripListTopbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 2px solid var(--color-ink);
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+}
+
+.tripListTopbar h1 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.tripListLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-eur);
+  text-decoration: none;
+}
+
+.tripListLink:hover {
+  text-decoration: underline;
+}
+
+.tripListFilters {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 16px 20px;
+}
+
+.tripListField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tripListField label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}
+
+.tripListField input {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 14px;
+  background: var(--color-paper);
+  min-width: 160px;
+}
+
+.tripListField input:focus {
+  border-color: var(--color-ink-soft);
+}
+
+.tripListClear {
+  border: none;
+  background: transparent;
+  color: var(--color-ink-soft);
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.tripListStatus {
+  color: var(--color-ink-soft);
+  font-size: 14px;
+}
+
+.tripListStatusError {
+  color: var(--color-loss);
+}
+
+.tripListGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.tripCard {
+  display: block;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+  text-decoration: none;
+  color: var(--color-ink);
+  transition: border-color 0.15s ease;
+}
+
+.tripCard:hover {
+  border-color: var(--color-ink-soft);
+}
+
+.tripCardTopline {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 6px;
+}
+
+.tripCardName {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin: 0;
+}
+
+.tripCardDelete {
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  color: var(--color-loss);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tripCardDelete:hover {
+  border-color: var(--color-loss);
+}
+
+.tripCardDelete:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.tripCardDates {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-ink-soft);
+  margin: 0 0 12px;
+}
+
+.tripCardMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-ink-soft);
+  border-top: 1px dashed var(--color-line-strong);
+  padding-top: 10px;
+}
