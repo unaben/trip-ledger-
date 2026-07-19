@@ -1,4 +1,4 @@
-import { TripList } from "@/features/tripList/tripList";
+import { TripList } from "@/features/TripList/TripList";
 
 export default function TripsPage() {
   return <TripList />;
