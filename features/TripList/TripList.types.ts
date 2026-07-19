@@ -1,6 +1,4 @@
 import type { SavedTrip } from "@/features/TripCalculator/TripCalculator.types";
-
-/** What the person has typed into the search/filter fields. */
 export interface TripListFilter {
   name: string;
   dateFrom: string;
