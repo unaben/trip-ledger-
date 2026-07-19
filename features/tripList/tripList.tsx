@@ -10,7 +10,7 @@ import TripListGrid from "./components/TripListGrid";
 import TripListFilters from "./components/TripListFilters";
 import styles from "./TripList.module.css";
 
-export function TripList() {
+ function TripList() {
   const { isAdmin } = useCurrentUser();
   const {
     handleConfirmDelete,
@@ -84,3 +84,4 @@ export function TripList() {
     </main>
   );
 }
+export default TripList
