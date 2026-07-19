@@ -18,6 +18,15 @@ import { createId } from "@/features/TripCalculator/TripCalculator.utils";
 
 type TripWithLineItems = PrismaTrip & { lineItems: PrismaLineItem[] };
 
+export interface TripFilter {
+  /** Case-insensitive, partial match against the trip name. */
+  name?: string;
+  /** Only include trips whose date range starts on/after this date. */
+  dateFrom?: string;
+  /** Only include trips whose date range starts on/before this date. */
+  dateTo?: string;
+}
+
 /** Thrown internally to break out of a transaction when 
 the target trip doesn't exist; never leaves this file. */
 class TripNotFoundError extends Error {}
@@ -130,14 +139,7 @@ function buildLineItemRows(tripId: string, data: TripData) {
   ];
 }
 
-export interface TripFilter {
-  /** Case-insensitive, partial match against the trip name. */
-  name?: string;
-  /** Only include trips whose date range starts on/after this date. */
-  dateFrom?: string;
-  /** Only include trips whose date range starts on/before this date. */
-  dateTo?: string;
-}
+
 
 export async function listTrips(filter: TripFilter = {}): Promise<SavedTrip[]> {
   const tripDateFromFilter: { gte?: Date; lte?: Date } = {};

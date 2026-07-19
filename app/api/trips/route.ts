@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { createTrip, listTrips } from "@/lib/storage";
+import { requireAdmin, requireUser } from "@/lib/auth/currentUser";
 import type { TripData } from "@/features/TripCalculator/TripCalculator.types";
 
+/** Returns every saved trip that matches the optional name/date filters. */
 export async function GET(request: Request) {
+  const auth = await requireUser();
+  if (auth instanceof NextResponse) return auth;
+
   const { searchParams } = new URL(request.url);
 
   try {
@@ -21,7 +26,13 @@ export async function GET(request: Request) {
   }
 }
 
+/** Saves a newly-submitted trip and returns it with its id. 
+ * Admin only - users have read-only access. 
+*/
 export async function POST(request: Request) {
+  const auth = await requireAdmin();
+  if (auth instanceof NextResponse) return auth;
+
   let body: TripData;
   try {
     body = (await request.json()) as TripData;

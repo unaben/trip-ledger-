@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { deleteTrip, getTripById, updateTrip } from "@/lib/storage";
+import { requireAdmin, requireUser } from "@/lib/auth/currentUser";
 import type { TripData } from "@/features/TripCalculator/TripCalculator.types";
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireUser();
+  if (auth instanceof NextResponse) return auth;
+
   const { id } = await params;
 
   try {
@@ -27,6 +31,9 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin();
+  if (auth instanceof NextResponse) return auth;
+
   const { id } = await params;
 
   let body: TripData;
@@ -55,6 +62,9 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin();
+  if (auth instanceof NextResponse) return auth;
+
   const { id } = await params;
 
   try {
