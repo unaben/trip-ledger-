@@ -1,35 +1,30 @@
 "use client";
 
 import cn from "classnames";
+import { addStay, removeStay, updateStay } from "./AccommodationSection.utils";
 import type { Currency } from "../../TripCalculator.types";
-import { createId } from "../../TripCalculator.utils";
 import type { AccommodationSectionProps } from "./AccommodationSection.types";
 import styles from "./AccommodationSection.module.css";
+import { CURRENCIES } from "@/constants";
 
-const CURRENCIES: Currency[] = ["GBP", "HUF", "EUR"];
 
-/**
- * A trip can be spent across several hotels - e.g. 2 nights at Hotel A,
- * then 3 nights at Hotel B. Every stay listed here adds to the trip's
- * total accommodation bill; they are not alternatives to pick between.
- */
-export function AccommodationSection({ stays, onChange }: AccommodationSectionProps) {
-  function updateStay(id: string, patch: Partial<AccommodationSectionProps["stays"][number]>) {
-    onChange(stays.map((stay) => (stay.id === id ? { ...stay, ...patch } : stay)));
-  }
 
-  function removeStay(id: string) {
-    onChange(stays.filter((stay) => stay.id !== id));
-  }
+export function AccommodationSection(props: AccommodationSectionProps) {
+  const { stays, onChange } = props;
 
-  function addStay() {
-    onChange([
-      ...stays,
-      { id: createId("stay"), name: "New hotel", pricePerNight: 0, currency: "HUF", nights: 1 },
-    ]);
-  }
+  const handleUpdate = (
+    id: string,
+    patch: Partial<AccommodationSectionProps["stays"][number]>
+  ) => onChange(updateStay(stays, id, patch));
 
-  const totalNights = stays.reduce((sum, stay) => sum + (Number(stay.nights) || 0), 0);
+  const handleRemove = (id: string) => onChange(removeStay(stays, id));
+
+  const handleAdd = () => onChange(addStay(stays));
+
+  const totalNights = stays.reduce(
+    (sum, stay) => sum + (Number(stay.nights) || 0),
+    0
+  );
 
   return (
     <section className={styles.accommodationSection} aria-label="Accommodation">
@@ -41,7 +36,13 @@ export function AccommodationSection({ stays, onChange }: AccommodationSectionPr
       </div>
 
       <div className={styles.accommodationSectionTable} role="table">
-        <div className={cn(styles.accommodationSectionRow, styles.accommodationSectionRowHead)} role="row">
+        <div
+          className={cn(
+            styles.accommodationSectionRow,
+            styles.accommodationSectionRowHead
+          )}
+          role="row"
+        >
           <span role="columnheader">Hotel</span>
           <span role="columnheader">Price / night</span>
           <span role="columnheader">Currency</span>
@@ -50,12 +51,16 @@ export function AccommodationSection({ stays, onChange }: AccommodationSectionPr
         </div>
 
         {stays.map((stay) => (
-          <div className={styles.accommodationSectionRow} role="row" key={stay.id}>
+          <div
+            className={styles.accommodationSectionRow}
+            role="row"
+            key={stay.id}
+          >
             <input
               className={styles.accommodationSectionName}
               type="text"
               value={stay.name}
-              onChange={(e) => updateStay(stay.id, { name: e.target.value })}
+              onChange={(e) => handleUpdate(stay.id, { name: e.target.value })}
               aria-label="Hotel name"
             />
             <input
@@ -64,16 +69,24 @@ export function AccommodationSection({ stays, onChange }: AccommodationSectionPr
               min="0"
               step="0.01"
               value={stay.pricePerNight}
-              onChange={(e) => updateStay(stay.id, { pricePerNight: Number(e.target.value) })}
+              onChange={(e) =>
+                handleUpdate(stay.id, { pricePerNight: Number(e.target.value) })
+              }
               aria-label="Price per night"
             />
             <select
               className={cn(
                 styles.accommodationSectionCurrency,
-                styles[`accommodationSectionCurrency${stay.currency.charAt(0)}${stay.currency.slice(1).toLowerCase()}`]
+                styles[
+                  `accommodationSectionCurrency${stay.currency.charAt(
+                    0
+                  )}${stay.currency.slice(1).toLowerCase()}`
+                ]
               )}
               value={stay.currency}
-              onChange={(e) => updateStay(stay.id, { currency: e.target.value as Currency })}
+              onChange={(e) =>
+                handleUpdate(stay.id, { currency: e.target.value as Currency })
+              }
               aria-label="Currency"
             >
               {CURRENCIES.map((c) => (
@@ -87,13 +100,15 @@ export function AccommodationSection({ stays, onChange }: AccommodationSectionPr
               type="number"
               min="0"
               value={stay.nights}
-              onChange={(e) => updateStay(stay.id, { nights: Number(e.target.value) })}
+              onChange={(e) =>
+                handleUpdate(stay.id, { nights: Number(e.target.value) })
+              }
               aria-label="Number of nights"
             />
             <button
               type="button"
               className={styles.accommodationSectionRemove}
-              onClick={() => removeStay(stay.id)}
+              onClick={() => handleRemove(stay.id)}
               aria-label={`Remove ${stay.name}`}
               title="Remove stay"
             >
@@ -109,11 +124,16 @@ export function AccommodationSection({ stays, onChange }: AccommodationSectionPr
         )}
       </div>
 
-      <button type="button" className={styles.accommodationSectionAdd} onClick={addStay}>
+      <button
+        type="button"
+        className={styles.accommodationSectionAdd}
+        onClick={handleAdd}
+      >
         + Add hotel stay
       </button>
       <p className={styles.accommodationSectionHint}>
-        Every stay adds to the total. Cost per stay = price per night &times; nights &times; total travelers.
+        Every stay adds to the total. Cost per stay = price per night &times;
+        nights &times; total travelers.
       </p>
     </section>
   );

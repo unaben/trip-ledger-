@@ -3,9 +3,11 @@
 import cn from "classnames";
 import { useState } from "react";
 import Link from "next/link";
+import { useCurrentUser } from "@/context";
 import { useTripDetail } from "./hooks/useTripDetail";
 import TripDetailEdit from "./components/TripDetailEdit";
 import TripDetailView from "./components/TripDetailView";
+import { toDraft } from "./TripDetail.utils";
 import type { TripData } from "@/features/TripCalculator/TripCalculator.types";
 import type { TripDetailProps } from "./TripDetail.types";
 import styles from "./TripDetail.module.css";
@@ -14,16 +16,11 @@ export function TripDetail({ tripId }: TripDetailProps) {
   const { trip, status, saveTrip, saveStatus } = useTripDetail(tripId);
   const [mode, setMode] = useState<"view" | "edit">("view");
   const [draft, setDraft] = useState<TripData | null>(null);
+  const { isAdmin } = useCurrentUser();
 
   function startEditing() {
     if (!trip) return;
-    const {
-      id: _id,
-      createdAt: _createdAt,
-      updatedAt: _updatedAt,
-      ...data
-    } = trip;
-    setDraft(data);
+    setDraft(toDraft(trip));
     setMode("edit");
   }
 
@@ -82,5 +79,5 @@ export function TripDetail({ tripId }: TripDetailProps) {
     );
   }
 
-  return <TripDetailView trip={trip} onEdit={startEditing} />;
+  return <TripDetailView trip={trip} onEdit={startEditing} isAdmin={isAdmin} />;
 }

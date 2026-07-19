@@ -2,49 +2,46 @@
 
 import cn from "classnames";
 import type { Currency, PricingType } from "../../TripCalculator.types";
-import { createId } from "../../TripCalculator.utils";
+import { CURRENCY_CLASS, PRICING_TYPES } from "./constants";
+import { CURRENCIES } from "@/constants";
+import { addItem, removeItem, updateItem } from "./TransportationSection.utils";
 import type { TransportationSectionProps } from "./TransportationSection.types";
-import styles from './TransportationSection.module.css'
+import styles from "./TransportationSection.module.css";
 
-const CURRENCIES: Currency[] = ["GBP", "HUF", "EUR"];
-const PRICING_TYPES: { value: PricingType; label: string }[] = [
-  { value: "group", label: "Flat / group price" },
-  { value: "perPerson", label: "Per person" },
-];
+export function TransportationSection(props: TransportationSectionProps) {
+  const { items, onChange } = props;
 
-const CURRENCY_CLASS: Record<Currency, string> = {
-  GBP: "transportationSectionCurrencyGbp",
-  HUF: "transportationSectionCurrencyHuf",
-  EUR: "transportationSectionCurrencyEur",
-};
+  const handleUpdate = (id: string, patch: Partial<(typeof items)[number]>) =>
+    onChange(updateItem(items, id, patch));
 
-export function TransportationSection({ items, onChange }: TransportationSectionProps) {
-  function updateItem(id: string, patch: Partial<(typeof items)[number]>) {
-    onChange(items.map((item) => (item.id === id ? { ...item, ...patch } : item)));
-  }
+  const handleRemove = (id: string) => onChange(removeItem(items, id));
 
-  function removeItem(id: string) {
-    onChange(items.filter((item) => item.id !== id));
-  }
-
-  function addItem() {
-    onChange([
-      ...items,
-      { id: createId("trans"), name: "New transport", price: 0, currency: "GBP", pricingType: "group", units: 1 },
-    ]);
-  }
+  const handleAdd = () => onChange(addItem(items));
 
   return (
-    <section className={styles.transportationSection} aria-label="Transportation">
+    <section
+      className={styles.transportationSection}
+      aria-label="Transportation"
+    >
       <div className={styles.transportationSectionHeader}>
         <h2>Transportation</h2>
-        <button type="button" className={styles.transportationSectionAdd} onClick={addItem}>
+        <button
+          type="button"
+          className={styles.transportationSectionAdd}
+          onClick={handleAdd}
+        >
           + Add transport
         </button>
       </div>
 
       <div className={styles.transportationSectionTable} role="table">
-        <div className={cn(styles.transportationSectionRow, styles.transportationSectionRowHead)} role="row">
+        <div
+          className={cn(
+            styles.transportationSectionRow,
+            styles.transportationSectionRowHead
+          )}
+          role="row"
+        >
           <span role="columnheader">Item</span>
           <span role="columnheader">Price</span>
           <span role="columnheader">Currency</span>
@@ -54,12 +51,16 @@ export function TransportationSection({ items, onChange }: TransportationSection
         </div>
 
         {items.map((item) => (
-          <div className={styles.transportationSectionRow} role="row" key={item.id}>
+          <div
+            className={styles.transportationSectionRow}
+            role="row"
+            key={item.id}
+          >
             <input
               className={styles.transportationSectionName}
               type="text"
               value={item.name}
-              onChange={(e) => updateItem(item.id, { name: e.target.value })}
+              onChange={(e) => handleUpdate(item.id, { name: e.target.value })}
               aria-label="Transport name"
             />
             <input
@@ -68,13 +69,20 @@ export function TransportationSection({ items, onChange }: TransportationSection
               min="0"
               step="0.01"
               value={item.price}
-              onChange={(e) => updateItem(item.id, { price: Number(e.target.value) })}
+              onChange={(e) =>
+                handleUpdate(item.id, { price: Number(e.target.value) })
+              }
               aria-label="Price"
             />
             <select
-              className={cn(styles.transportationSectionCurrency, styles[CURRENCY_CLASS[item.currency]])}
+              className={cn(
+                styles.transportationSectionCurrency,
+                styles[CURRENCY_CLASS[item.currency]]
+              )}
               value={item.currency}
-              onChange={(e) => updateItem(item.id, { currency: e.target.value as Currency })}
+              onChange={(e) =>
+                handleUpdate(item.id, { currency: e.target.value as Currency })
+              }
               aria-label="Currency"
             >
               {CURRENCIES.map((c) => (
@@ -86,7 +94,11 @@ export function TransportationSection({ items, onChange }: TransportationSection
             <select
               className={styles.transportationSectionPricingType}
               value={item.pricingType}
-              onChange={(e) => updateItem(item.id, { pricingType: e.target.value as PricingType })}
+              onChange={(e) =>
+                handleUpdate(item.id, {
+                  pricingType: e.target.value as PricingType,
+                })
+              }
               aria-label="Pricing type"
             >
               {PRICING_TYPES.map((t) => (
@@ -100,13 +112,15 @@ export function TransportationSection({ items, onChange }: TransportationSection
               type="number"
               min="0"
               value={item.units}
-              onChange={(e) => updateItem(item.id, { units: Number(e.target.value) })}
+              onChange={(e) =>
+                handleUpdate(item.id, { units: Number(e.target.value) })
+              }
               aria-label="Units"
             />
             <button
               type="button"
               className={styles.transportationSectionRemove}
-              onClick={() => removeItem(item.id)}
+              onClick={() => handleRemove(item.id)}
               aria-label={`Remove ${item.name}`}
               title="Remove transport"
             >
@@ -123,7 +137,8 @@ export function TransportationSection({ items, onChange }: TransportationSection
       </div>
 
       <p className={styles.transportationSectionHint}>
-        Every item adds to the total. Cost = price &times; units (&times; total travelers if &quot;per person&quot;).
+        Every item adds to the total. Cost = price &times; units (&times; total
+        travelers if &quot;per person&quot;).
       </p>
     </section>
   );

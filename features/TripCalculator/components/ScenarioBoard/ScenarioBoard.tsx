@@ -1,23 +1,23 @@
 "use client";
 
 import cn from "classnames";
-import type { Scenario } from "../../TripCalculator.types";
 import { formatGbp } from "../../TripCalculator.utils";
 import type { ScenarioBoardProps } from "./ScenarioBoard.types";
-import styles from './ScenarioBoard.module.css'
+import { updateScenario } from "./ScenarioBoard.utils";
+import { Scenario } from "../../TripCalculator.types";
+import styles from "./ScenarioBoard.module.css";
 
-export function ScenarioBoard({
-  scenarios,
-  results,
-  packageSalePriceGbp,
-  onScenariosChange,
-  onPackageSalePriceChange,
-}: ScenarioBoardProps) {
-  function updateScenario(id: string, patch: Partial<Scenario>) {
-    onScenariosChange(
-      scenarios.map((s) => (s.id === id ? { ...s, ...patch } : s))
-    );
-  }
+export function ScenarioBoard(props: ScenarioBoardProps) {
+  const {
+    scenarios,
+    results,
+    packageSalePriceGbp,
+    onScenariosChange,
+    onPackageSalePriceChange,
+  } = props;
+
+  const handleScenario = (id: string, patch: Partial<Scenario>) =>
+    onScenariosChange(updateScenario(id, patch, scenarios));
 
   return (
     <section className={styles.scenarioBoard} aria-label="Scenario comparison">
@@ -55,7 +55,7 @@ export function ScenarioBoard({
                   type="text"
                   value={scenario.label}
                   onChange={(e) =>
-                    updateScenario(scenario.id, { label: e.target.value })
+                    handleScenario(scenario.id, { label: e.target.value })
                   }
                   aria-label="Scenario name"
                 />
@@ -70,7 +70,7 @@ export function ScenarioBoard({
                     className="tabular-num"
                     value={scenario.numPayers}
                     onChange={(e) =>
-                      updateScenario(scenario.id, {
+                      handleScenario(scenario.id, {
                         numPayers: Number(e.target.value),
                       })
                     }
@@ -84,7 +84,7 @@ export function ScenarioBoard({
                     className="tabular-num"
                     value={scenario.totalTravelers}
                     onChange={(e) =>
-                      updateScenario(scenario.id, {
+                      handleScenario(scenario.id, {
                         totalTravelers: Number(e.target.value),
                       })
                     }

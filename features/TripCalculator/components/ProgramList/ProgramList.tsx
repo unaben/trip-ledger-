@@ -1,56 +1,44 @@
 "use client";
 
 import cn from "classnames";
+import { CURRENCY_CLASS, PRICING_TYPES } from "./constants";
+import { addProgram, removeProgram, updateProgram } from "./ProgramList.utils";
+import { CURRENCIES } from "@/constants";
 import type { Currency, PricingType } from "../../TripCalculator.types";
-import { createId } from "../../TripCalculator.utils";
 import type { ProgramListProps } from "./ProgramList.types";
-import styles from './ProgramList.module.css'
-
-const CURRENCIES: Currency[] = ["GBP", "HUF", "EUR"];
-const PRICING_TYPES: { value: PricingType; label: string }[] = [
-  { value: "group", label: "Flat / group price" },
-  { value: "perPerson", label: "Per person" },
-];
-
-const CURRENCY_CLASS: Record<Currency, string> = {
-  GBP: "programListCurrencyGbp",
-  HUF: "programListCurrencyHuf",
-  EUR: "programListCurrencyEur",
-};
+import styles from "./ProgramList.module.css";
 
 export function ProgramList({ programs, onChange }: ProgramListProps) {
-  function updateProgram(id: string, patch: Partial<(typeof programs)[number]>) {
-    onChange(programs.map((p) => (p.id === id ? { ...p, ...patch } : p)));
-  }
+  const handleUpdate = (
+    id: string,
+    patch: Partial<(typeof programs)[number]>
+  ) => onChange(updateProgram(programs, id, patch));
 
-  function removeProgram(id: string) {
-    onChange(programs.filter((p) => p.id !== id));
-  }
+  const handleRemove = (id: string) => onChange(removeProgram(programs, id));
 
-  function addProgram() {
-    onChange([
-      ...programs,
-      {
-        id: createId("prog"),
-        name: "New item",
-        price: 0,
-        currency: "GBP",
-        pricingType: "group",
-      },
-    ]);
-  }
+  const handleAdd = () => onChange(addProgram(programs));
 
   return (
-    <section className={styles.programList} aria-label="Program and activity costs">
+    <section
+      className={styles.programList}
+      aria-label="Program and activity costs"
+    >
       <div className={styles.programListHeader}>
         <h2>Programs &amp; activities</h2>
-        <button type="button" className={styles.programListAdd} onClick={addProgram}>
+        <button
+          type="button"
+          className={styles.programListAdd}
+          onClick={handleAdd}
+        >
           + Add item
         </button>
       </div>
 
       <div className={styles.programListTable} role="table">
-        <div className={cn(styles.programListRow, styles.programListRowHead)} role="row">
+        <div
+          className={cn(styles.programListRow, styles.programListRowHead)}
+          role="row"
+        >
           <span role="columnheader">Item</span>
           <span role="columnheader">Price</span>
           <span role="columnheader">Currency</span>
@@ -64,7 +52,9 @@ export function ProgramList({ programs, onChange }: ProgramListProps) {
               className={styles.programListName}
               type="text"
               value={program.name}
-              onChange={(e) => updateProgram(program.id, { name: e.target.value })}
+              onChange={(e) =>
+                handleUpdate(program.id, { name: e.target.value })
+              }
               aria-label="Item name"
             />
             <input
@@ -74,15 +64,20 @@ export function ProgramList({ programs, onChange }: ProgramListProps) {
               step="0.01"
               value={program.price}
               onChange={(e) =>
-                updateProgram(program.id, { price: Number(e.target.value) })
+                handleUpdate(program.id, { price: Number(e.target.value) })
               }
               aria-label="Price"
             />
             <select
-              className={cn(styles.programListCurrency, styles[CURRENCY_CLASS[program.currency]])}
+              className={cn(
+                styles.programListCurrency,
+                styles[CURRENCY_CLASS[program.currency]]
+              )}
               value={program.currency}
               onChange={(e) =>
-                updateProgram(program.id, { currency: e.target.value as Currency })
+                handleUpdate(program.id, {
+                  currency: e.target.value as Currency,
+                })
               }
               aria-label="Currency"
             >
@@ -96,7 +91,7 @@ export function ProgramList({ programs, onChange }: ProgramListProps) {
               className={styles.programListPricingType}
               value={program.pricingType}
               onChange={(e) =>
-                updateProgram(program.id, {
+                handleUpdate(program.id, {
                   pricingType: e.target.value as PricingType,
                 })
               }
@@ -111,7 +106,7 @@ export function ProgramList({ programs, onChange }: ProgramListProps) {
             <button
               type="button"
               className={styles.programListRemove}
-              onClick={() => removeProgram(program.id)}
+              onClick={() => handleRemove(program.id)}
               aria-label={`Remove ${program.name}`}
               title="Remove item"
             >

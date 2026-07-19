@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { SavedTrip, TripListFilter } from "../tripList.types";
+import type { SavedTrip, TripListFilter } from "../TripList.types";
 
 type Status = "loading" | "idle" | "error";
 

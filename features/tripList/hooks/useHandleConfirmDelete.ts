@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { TripListFilter, PendingDelete } from "../tripList.types";
+import type { TripListFilter, PendingDelete } from "../TripList.types";
 import { useTripList } from "./useTripList";
 
 export const EMPTY_FILTER: TripListFilter = { name: "", dateFrom: "", dateTo: "" };

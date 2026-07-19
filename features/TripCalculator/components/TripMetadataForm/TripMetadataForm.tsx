@@ -4,13 +4,14 @@ import cn from "classnames";
 import type { TripMetadataFormProps } from "./TripMetadataForm.types";
 import styles from "./TripMetadataForm.module.css";
 
-export function TripMetadataForm({
-  metadata,
-  onChange,
-}: TripMetadataFormProps) {
+export function TripMetadataForm(props: TripMetadataFormProps) {
+  const { metadata, onChange } = props;
+
   return (
     <section className={styles.metadataForm} aria-label="Trip details">
-      <div className={cn(styles.metadataFormField, styles.metadataFormFieldWide)}>
+      <div
+        className={cn(styles.metadataFormField, styles.metadataFormFieldWide)}
+      >
         <label htmlFor="tripName">Trip name</label>
         <input
           id="tripName"

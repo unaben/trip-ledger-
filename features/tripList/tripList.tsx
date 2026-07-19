@@ -1,14 +1,17 @@
 "use client";
 
+import { useCallback } from "react";
 import Link from "next/link";
 import cn from "classnames";
-import useHandleConfirmDelete, {
-  EMPTY_FILTER,
-} from "./hooks/useHandleConfirmDelete";
-import { ConfirmationModal } from "@/commons/components";
-import styles from "./tripList.module.css";
+import useHandleConfirmDelete from "./hooks/useHandleConfirmDelete";
+import { ConfirmationModal } from "@/components";
+import { useCurrentUser } from "@/context";
+import TripListGrid from "./components/TripListGrid";
+import TripListFilters from "./components/TripListFilters";
+import styles from "./TripList.module.css";
 
 export function TripList() {
+  const { isAdmin } = useCurrentUser();
   const {
     handleConfirmDelete,
     filter,
@@ -21,71 +24,27 @@ export function TripList() {
     setPendingDelete,
   } = useHandleConfirmDelete();
 
-  function handleDeleteClick(
-    e: React.MouseEvent,
-    tripId: string,
-    tripName: string
-  ) {
-    e.preventDefault(); 
-    e.stopPropagation();
-    setPendingDelete({ id: tripId, name: tripName });
-  }
+  const handleDeleteClick = useCallback(
+    (e: React.MouseEvent, tripId: string, tripName: string) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setPendingDelete({ id: tripId, name: tripName });
+    },
+    [setPendingDelete]
+  );
 
   return (
     <main className={styles.tripList}>
       <div className={styles.tripListTopbar}>
         <h1>Saved trips</h1>
-        <Link className={styles.tripListLink} href="/">
-          + New trip
-        </Link>
+        {isAdmin && (
+          <Link className={styles.tripListLink} href="/">
+            + New trip
+          </Link>
+        )}
       </div>
 
-      <section
-        className={styles.tripListFilters}
-        aria-label="Search saved trips"
-      >
-        <div className={styles.tripListField}>
-          <label htmlFor="filterName">Trip name</label>
-          <input
-            id="filterName"
-            type="text"
-            placeholder="Search by name…"
-            value={filter.name}
-            onChange={(e) => setFilter((f) => ({ ...f, name: e.target.value }))}
-          />
-        </div>
-        <div className={styles.tripListField}>
-          <label htmlFor="filterFrom">From date</label>
-          <input
-            id="filterFrom"
-            type="date"
-            value={filter.dateFrom}
-            onChange={(e) =>
-              setFilter((f) => ({ ...f, dateFrom: e.target.value }))
-            }
-          />
-        </div>
-        <div className={styles.tripListField}>
-          <label htmlFor="filterTo">To date</label>
-          <input
-            id="filterTo"
-            type="date"
-            value={filter.dateTo}
-            onChange={(e) =>
-              setFilter((f) => ({ ...f, dateTo: e.target.value }))
-            }
-          />
-        </div>
-        {(filter.name || filter.dateFrom || filter.dateTo) && (
-          <button
-            type="button"
-            className={styles.tripListClear}
-            onClick={() => setFilter(EMPTY_FILTER)}
-          >
-            Clear filters
-          </button>
-        )}
-      </section>
+      <TripListFilters filter={filter} setFilter={setFilter} />
 
       {deleteError && (
         <p className={cn(styles.tripListStatus, styles.tripListStatusError)}>
@@ -106,37 +65,12 @@ export function TripList() {
         <p className={styles.tripListStatus}>No trips match your search yet.</p>
       )}
 
-      <div className={styles.tripListGrid}>
-        {trips.map((trip) => (
-          <Link
-            className={styles.tripCard}
-            href={`/trips/${trip.id}`}
-            key={trip.id}
-          >
-            <div className={styles.tripCardTopline}>
-              <h2 className={styles.tripCardName}>{trip.metadata.tripName}</h2>
-              <button
-                type="button"
-                className={styles.tripCardDelete}
-                onClick={(e) =>
-                  handleDeleteClick(e, trip.id, trip.metadata.tripName)
-                }
-                disabled={deletingId === trip.id}
-                aria-label={`Delete ${trip.metadata.tripName}`}
-              >
-                {deletingId === trip.id ? "Deleting…" : "Delete"}
-              </button>
-            </div>
-            <p className={styles.tripCardDates}>
-              {trip.metadata.tripDateFrom} &rarr; {trip.metadata.tripDateTo}
-            </p>
-            <div className={styles.tripCardMeta}>
-              <span>{trip.scenarios.length} scenarios</span>
-              <span>Sale price £{trip.packageSalePriceGbp}</span>
-            </div>
-          </Link>
-        ))}
-      </div>
+      <TripListGrid
+        deletingId={deletingId}
+        handleDeleteClick={handleDeleteClick}
+        isAdmin={isAdmin}
+        trips={trips}
+      />
 
       <ConfirmationModal
         isOpen={pendingDelete !== null}
