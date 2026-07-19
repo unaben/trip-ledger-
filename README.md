@@ -1,203 +1,197 @@
-# Trip Pricing & Profit Calculator
+# Trip Ledger
 
-A tool for planning a multi-currency trip: enter costs in HUF, EUR or GBP
-across several hotels and transport options, compare 3 group-size
-scenarios side by side, submit the trip, then search and browse every
-trip you've saved.
+A multi-currency trip pricing and profit calculator. Price a trip's
+accommodation, transportation, and programs in GBP/EUR/HUF, compare profit
+margins across different group-size scenarios, and save trips for later.
 
-This README explains **how the code is organised and why**, in plain
-English. You don't need to be an expert in Next.js to follow it.
+## Tech stack
 
----
+- **Next.js 16** (App Router, Turbopack) + **TypeScript**
+- **Prisma 7** with `@prisma/adapter-mariadb` (driver adapter architecture -
+  see "Database" below for why this isn't a plain `DATABASE_URL` setup)
+- **MySQL**, hosted on Hostinger in production, or a local Docker container
+  for development
+- Vanilla CSS (no framework) - a deliberate "ledger" visual style: paper,
+  ink, serif headings
+- Custom authentication - signed session cookies, no third-party auth
+  provider (see "Authentication & authorization" below)
 
-## How to run it
-
-```bash
-npm install
-npm run dev
-```
-
-Then open **http://localhost:3000**.
-
-To try the "real" production version instead:
-
-```bash
-npm run build
-npm run start
-```
-
----
-
-## The 3 pages
-
-| Page | What it's for |
-|---|---|
-| `/` | **New trip form** - fill in the trip, see the 3-scenario comparison update live, then press **Submit trip** to save it. |
-| `/trips` | **Saved trips** - search/filter by trip name and date, click any card to open it. |
-| `/trips/[id]` | **Trip detail** - shows everything about one saved trip. Press **Edit** to turn it into the same editable inputs as the new-trip form, then **Save changes** to update it, or **Cancel** to discard your edits. |
-
-The form does **not** save as you type. It keeps your edits in
-memory, and only writes anything to storage when you press **Submit
-trip** - at that point it's saved for good, a confirmation message
-appears, and **the form clears itself back to a blank trip** so you can
-start the next one straight away (the confirmation links to `/trips`
-if you'd rather go look at what you just saved).
-
-**The very first time the app is opened** - before anyone has submitted
-a trip - the form fills itself in with a sample trip (Hévíz Hotel,
-sample tours, etc.) so it's obvious what a filled-in trip looks like.
-That sample only ever appears once: `useTripForm` checks with the
-server (`GET /api/trips`) whether any trip has ever been submitted, and
-only shows the sample when the answer is "none yet". Every reset after
-that - including right after that very first submit - goes back to a
-genuinely blank trip (`createBlankTripData`), not the sample again.
-
----
-
-## The big idea: where does the data live?
-
-Every submitted trip is stored as one JSON file on the server, at:
-
-```
-data/trips.json
-```
-
-It's a simple JSON array - one object per submitted trip. Three things
-happen to that file, and **all three live in exactly one place**,
-`lib/storage.ts`:
-
-- **`createTrip(data)`** - called when the form is submitted. Adds a new
-  trip to the array (with a generated id and timestamp) and saves it.
-- **`listTrips(filter)`** - called by the `/trips` search page. Reads
-  every trip and filters it down by name/date, in plain JavaScript.
-- **`getTripById(id)`** - called by the `/trips/[id]` detail page. Finds
-  one trip by its id.
-- **`updateTrip(id, data)`** - called when you edit a saved trip and
-  press Save. Finds the trip, replaces its details, keeps its original
-  id and `createdAt`, and stamps a fresh `updatedAt`.
-
-**Why this matters for Supabase (or any other database) later:** every
-other file in the app - the API routes, the pages, the components -
-only ever calls these three functions. None of them know or care that
-the data currently lives in a JSON file. When you're ready to move to a
-real database, you rewrite the *insides* of these three functions to
-run database queries instead (e.g. `listTrips` becomes a `SELECT ... WHERE`
-instead of a `.filter()`), and nothing else in the app has to change.
-
-```
-Browser  <--fetch-->  app/api/trips/route.ts        <--calls-->  lib/storage.ts  <--reads/writes-->  data/trips.json
-Browser  <--fetch-->  app/api/trips/[id]/route.ts   <--calls-->  lib/storage.ts
-```
-
----
-
-## How the folders are organised
+## Project structure
 
 ```
 app/
-  page.tsx                    the "/" route - renders the new trip form
-  layout.tsx                  page shell (fonts, <html> tag)
-  globals.css                 colours, fonts, sizes used everywhere ("design tokens")
-  trips/
-    page.tsx                  the "/trips" route - renders the saved trips list
-    [id]/page.tsx              the "/trips/[id]" route - renders one trip's detail page
+  page.tsx                 - new trip form (admin only)
+  login/                   - login page
+  account/                 - change password (any logged-in user)
+  admin/users/             - user management (admin only)
+  trips/                   - saved trips list + detail pages
   api/
-    trips/route.ts             GET (search/list) + POST (submit) - talks to lib/storage.ts
-    trips/[id]/route.ts        GET (one trip's details) + PUT (save edits) - talks to lib/storage.ts
-
-lib/
-  storage.ts                   the only file that knows trips live in a JSON file (see above)
-
-data/
-  trips.json                   the actual saved trips (created automatically on first submit)
+    auth/                  - login, logout, me, change-password
+    admin/users/           - user CRUD (admin only)
+    trips/                 - trip CRUD
 
 features/
-  trip-calculator/              the "new trip" form
-    trip-calculator.tsx/.css     the form screen
-    trip-calculator.types.ts     shapes of all our data (TypeScript types), shared by every feature
-    trip-calculator.logic.ts     the maths: cost per scenario, profit, etc.
-    trip-calculator.utils.ts     currency conversion, number/money formatting
-    trip-calculator.defaults.ts  starting data for a brand-new form (see below)
-    hooks/use-trip-form.ts       holds the form's state in memory, submits it on demand
-    components/
-      trip-metadata-form/        trip name, date range, exchange rates
-      accommodation-section/     the list of hotel stays (see below)
-      transportation-section/    the list of transport costs (see below)
-      program-list/              everything else: tours, meals, therapy...
-      scenario-board/            the 3 side-by-side scenario "receipts"
+  TripCalculator/          - the new-trip form and its pricing logic
+  TripList/                - saved trips list, search/filter, delete
+  TripDetail/              - view/edit a single saved trip
+  AdminUsers/               - the admin user-management page
+  ChangePassword/          - the change-password form
 
-  trip-list/                    the "/trips" search page
-    trip-list.tsx/.css/.types.ts
-    hooks/use-trip-list.ts       calls GET /api/trips with the current filter
+components/
+  AppNav/                  - shared top nav (shows current user, logout, admin link)
+  ConfirmationModal/       - generic yes/no confirmation dialog (replaces browser confirm())
+  CurrentUserProvider/     - shares one server-fetched "current user" across the whole page
+  index.ts                 - barrel export for the above
 
-  trip-detail/                  the "/trips/[id]" read-only page
-    trip-detail.tsx/.css/.types.ts
-    hooks/use-trip-detail.ts     calls GET /api/trips/<id>, and PUT to save edits
+lib/
+  prisma.ts                - Prisma Client singleton (driver adapter config)
+  storage.ts               - all trip data access (the only file that knows trips live in MySQL)
+  auth/
+    session.ts             - signs/verifies the session cookie (no DB access)
+    currentUser.ts         - the AUTHORITATIVE auth check (re-reads the DB every time)
+    password.ts            - bcrypt hashing/verification
+    rateLimit.ts            - basic in-memory login rate limiting
+
+prisma/
+  schema.prisma            - describes tables that already exist in MySQL (see below)
+
+proxy.ts                   - Next.js 16's middleware equivalent; page-level route protection
+
+scripts/
+  createAdmin.ts            - bootstraps the very first admin account
+
+db/init/001-schema.sql      - the schema, auto-run by the local Docker MySQL container
+docker-compose.yml          - local MySQL for development
 ```
 
-Each component/feature folder follows the same pattern: `name.tsx` (what's
-on screen), `name.css` (how it looks), `name.types.ts` (what data it
-expects). Logic and maths live in their own files, separate from any
-component. That's the "clean architecture" idea in practice - change
-one thing without touching the rest.
+## Getting started
 
----
-
-## Accommodation: several hotels, each with their own nights
-
-A trip isn't always one hotel for the whole stay. The Accommodation
-section is a **list of stays** - e.g. "2 nights at Hotel A" followed by
-"3 nights at Hotel B" - and every stay adds to the total. They are not
-alternatives to pick between; if it's listed, it's included.
-
-```
-one stay's cost = price per night × that stay's nights × total travelers
+```bash
+npm install          # triggers `prisma generate` via postinstall
+cp .env.example .env # or .env.docker.example - see "Database" below
+npm run create-admin -- your@email.com "a-strong-password"
+npm run dev
 ```
 
-Add as many stays as the trip needs; remove any you don't.
+## Database
 
-## Transportation: several transport costs, each with their own quantity
+**Schema management is manual, not via `prisma migrate`.** The tables
+(`trips`, `line_items`, `users`) were created by hand in Hostinger's
+phpMyAdmin, not through Prisma's migration system - so `prisma/schema.prisma`
+is a description of what already exists, kept in sync by hand. Reasons this
+is deliberate (not a shortcut):
 
-Works the same way as accommodation, for things like an airport coach
-plus an inter-city train. Every item in the list adds to the total.
-Each item has a **"units"** count for how many times that cost happens
-(e.g. a round trip = 2 units):
+- Hostinger's shared MySQL plan doesn't support the shadow database
+  `prisma migrate dev` needs.
+- The tables already have real data and no `_prisma_migrations` history,
+  so running Migrate now would flag drift and could offer to reset the
+  database as a first "fix."
 
+If a schema change is ever needed: write the `ALTER TABLE`/`CREATE TABLE`
+SQL by hand, run it in phpMyAdmin (or the local container), then update
+`prisma/schema.prisma` to match, then `npx prisma generate`.
+
+**Prisma 7 uses a driver adapter, not a schema URL.** `prisma.config.ts`
+holds `DATABASE_URL` for the CLI only (`generate`/`db pull`/`studio`). The
+actual running app connects via `@prisma/adapter-mariadb` in `lib/prisma.ts`,
+configured from `DATABASE_HOST`/`PORT`/`USER`/`PASSWORD`/`NAME`. Both need
+to be set in `.env` - see `.env.example`.
+
+**Two environments to develop against:**
+
+- `.env.example` → real Hostinger database (production data)
+- `.env.docker.example` → local Docker MySQL (`docker compose up`,
+  see `docker-compose.yml`) - no `max_connections_per_hour` limit, safe to
+  hammer with hot reloads all day. Recommended for day-to-day development;
+  switch back to the Hostinger `.env` only to test against real data or
+  before deploying.
+
+## Authentication & authorization
+
+Two roles: **admin** (full read/write, manages users) and **user**
+(read-only - can view trips but not create, edit, or delete them, and
+cannot access user management).
+
+**Invite-only, no public signup.** The only way an account is created is
+an admin using the "Add user" form on `/admin/users`, or the bootstrap
+script below for the very first account:
+
+```bash
+npm run create-admin -- admin@example.com "a-strong-password"
 ```
-one item's cost = price × units × (total travelers, only if "per person")
+
+**How a session works:** on login, the server signs a JWT (via `jose`)
+containing the user's id/email/role and sets it as an `httpOnly`,
+`Secure`, `SameSite=Lax` cookie, valid for 7 days. Two different places
+check this cookie, deliberately doing different amounts of work:
+
+- **`proxy.ts`** (page-level routing) only verifies the cookie's
+  *signature and expiry* - no database call. It decides whether to
+  redirect to `/login`, or redirect a non-admin away from an admin-only
+  page (`/`, `/admin/*`). This is intentionally lightweight so it doesn't
+  add to database connection pressure on every single page view.
+- **Every API route** (`lib/auth/currentUser.ts`'s `requireUser()` /
+  `requireAdmin()`) is the actual authority: it re-reads the user from the
+  database on every call, so a deactivated account or a changed role takes
+  effect immediately for any real data operation - regardless of what's
+  still encoded in an unexpired cookie.
+
+Because of this split, `proxy.ts` hiding a page is a UX nicety, not the
+security boundary - the API route's own check is what actually protects
+the data. The UI (`CurrentUserProvider` / `useCurrentUser()`) also hides
+admin-only buttons (delete, edit, "+ New trip") for `user` accounts, which
+is *also* just UX - clicking one would 403 at the API level regardless.
+
+**Revoking access:** an admin sets a user's `isActive` to `false` from
+`/admin/users` ("Deactivate"). Since every API route re-checks this on
+every request, it takes effect on that user's very next action - not
+after a token expiry. Admins can't deactivate, demote, or delete their
+own account (a guard against accidentally locking every admin out).
+
+**Changing your own password:** any logged-in user (either role) can do
+this from `/account` - requires the current password, no admin
+involvement needed.
+
+**Known gaps, deliberately deferred rather than silently missing:**
+
+- **No "forgot password" flow.** There's no email infrastructure to send
+  a reset link. Right now, a lost password means an admin either
+  recreates the account or updates it directly in the database.
+- **Login rate limiting is in-memory only** (`lib/auth/rateLimit.ts`) -
+  resets per warm serverless instance on Vercel, so it's a real
+  speed bump against brute-forcing but not an airtight limit at scale.
+  Would need Redis/Vercel KV to be bulletproof.
+
+## Local development with Docker
+
+```bash
+npm run db:up                    # starts local MySQL, creates tables on first run
+cp .env.docker.example .env
+npm run create-admin -- you@example.com "password"
+npm run dev
 ```
 
-A "flat / group" item ignores traveler count entirely (e.g. one coach
-hire); a "per person" item is multiplied by how many travelers are on
-that scenario.
+`npm run db:down` stops it (data persists). Adding `-v` to that command
+deletes the volume too - wipes all local data, use deliberately.
 
----
+## Known limitations
 
-## How the maths works (`trip-calculator.logic.ts`)
+- **Prisma Studio doesn't work with this setup** - `a.sort is not a
+  function` when it tries to load schema metadata, a known upstream bug
+  in Prisma Studio's interaction with the MariaDB driver adapter (Prisma
+  issue #29280). The app itself works fine; use `phpMyAdmin` or a MySQL
+  CLI/GUI client to browse data instead.
+- **`max_connections_per_hour` (Hostinger, 500/hour default)** applies to
+  the production database user. This counts new connections opened, not
+  queries run - see the Docker section above for why local development
+  should avoid touching Hostinger's database directly.
 
-For each of the 3 scenarios:
+## Available scripts
 
-1. **Every accommodation stay's cost** is added up (see formula above).
-2. **Every transportation item's cost** is added up (see formula above).
-3. **Every other program's cost** (tours, meals, therapy...) is added -
-   either a flat group price, or a per-person price × total travelers.
-4. **Total expense** = the sum of all of the above.
-5. **Expense per person** = total expense ÷ **number of payers** (not
-   total travelers) - the idea being the payers are the ones actually
-   splitting the bill between themselves.
-6. **Revenue** = package sale price × number of payers.
-7. **Profit** = revenue − total expense.
-
-None of these functions know anything about React or the screen - they
-just take numbers in and give numbers back, which makes them easy to
-read and easy to test on their own.
-
----
-
-## What "clean architecture" means here, in one sentence
-
-**The screen (`.tsx`), the way things look (`.css`), the shape of the
-data (`.types.ts`), and the actual maths (`.logic.ts` / `.utils.ts`)
-each live in their own file - and the one function that knows data is
-stored as JSON (`lib/storage.ts`) is the only thing you'll need to
-change when you move to a real database.**
+| Command | What it does |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` / `npm run start` | Production build/run |
+| `npm run create-admin -- <email> <password>` | Bootstrap an admin account |
+| `npm run db:up` / `npm run db:down` | Start/stop the local Docker MySQL |
+| `npm run db:logs` | Tail the local MySQL container's logs |

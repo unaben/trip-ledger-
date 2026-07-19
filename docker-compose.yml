@@ -1,0 +1,25 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: trip-calculator-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: trip_calculator
+      MYSQL_USER: trip_calculator
+      MYSQL_PASSWORD: localdevpassword
+      MYSQL_ROOT_PASSWORD: localrootpassword
+    ports:
+      # host:container - change the left side if 3306 is already taken on
+      # your machine (e.g. by a different local MySQL install).
+      - "3306:3306"
+    volumes:
+      # Named volume: your data survives `docker compose down` and
+      # container restarts, but NOT `docker compose down -v`.
+      - trip-calculator-mysql-data:/var/lib/mysql
+      # Anything in here runs ONCE, automatically, the very first time the
+      # container starts with an empty data directory - this is how the
+      # tables get created without you touching phpMyAdmin.
+      - ./db/init:/docker-entrypoint-initdb.d
+
+volumes:
+  trip-calculator-mysql-data:
