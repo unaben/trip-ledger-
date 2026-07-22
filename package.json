@@ -11,7 +11,9 @@
     "create-admin": "tsx scripts/createAdmin.ts",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f mysql"
+    "db:logs": "docker compose logs -f mysql",
+    "env:docker": "node scripts/setEnv.mjs docker",
+    "env:hostinger": "node scripts/setEnv.mjs hostinger"
   },
   "dependencies": {
     "next": "16.2.10",
